@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        public: false
+        tags:
+            - console.command
+
+    cdn_bundle.command.file.check:
+        class: BastSys\CdnBundle\Command\FileCheckCommand
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@cdn_bundle.repository.file'
+            - '@cdn_bundle.file_service'
+
+
