@@ -2,20 +2,25 @@
 
 namespace BastSys\CdnBundle\Controller;
 
+use BastSys\CdnBundle\Event\FileUploadEvent;
 use BastSys\CdnBundle\Service\IFileService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class FileUploadController
  * @package BastSys\CdnBundle\Controller
  * @author  mirkl
  */
-class FileUploadController
+class FileUploadController extends AbstractController
 {
     const HEADER_FILE_NAME = 'X-File-Name';
+    const FILE_UPLOAD_PERMISSION = 'bastsys-cdn-file-upload-permission';
 
     /** @var EntityManagerInterface */
     private $em;
@@ -23,23 +28,32 @@ class FileUploadController
      * @var IFileService
      */
     private $fileService;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * FileUploadController constructor.
      *
      * @param EntityManagerInterface $em
      * @param IFileService $fileService
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EntityManagerInterface $em, IFileService $fileService)
+    public function __construct(EntityManagerInterface $em, IFileService $fileService, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
         $this->fileService = $fileService;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
+     * @Route("/file-upload", methods={"POST", "OPTIONS"})
+     *
      * @param Request $request
      *
      * @return Response
+     * @throws \Exception
      */
     public function handle(Request $request)
     {
@@ -48,6 +62,8 @@ class FileUploadController
                 'Access-Control-Allow-Headers' => self::HEADER_FILE_NAME
             ]);
         }
+
+        $this->denyAccessUnlessGranted(self::FILE_UPLOAD_PERMISSION);
 
         $headers = $request->headers;
         $fileName = $headers->get(self::HEADER_FILE_NAME);
@@ -61,6 +77,18 @@ class FileUploadController
             );
         }
         $file->setMimeType($contentType);
+
+        $event = new FileUploadEvent($file);
+        try {
+            $this->eventDispatcher->dispatch($event, $event::NAME);
+        } catch(\Exception $ex) {
+            $this->fileService->deleteFile($file);
+            throw $ex;
+        }
+
+        if($this->em->isOpen()) {
+            $this->em->flush();
+        }
 
         return new JsonResponse([
             'id' => $file->getId(),

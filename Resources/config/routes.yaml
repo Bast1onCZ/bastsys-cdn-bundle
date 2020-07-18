@@ -1,8 +1,0 @@
-cdn_bundle.route.file_upload:
-    path: /file-upload
-    methods: POST
-    controller: cdn_bundle.controller.file_upload::handle
-cdn_bundle.route.file_download:
-    path: /file-download/{id}
-    methods: GET
-    controller: cdn_bundle.controller.file_download::handle

@@ -1,6 +1,7 @@
 services:
     _defaults:
         public: true
+        autowire: true
 
     cdn_bundle.controller.file_upload:
         class: BastSys\CdnBundle\Controller\FileUploadController

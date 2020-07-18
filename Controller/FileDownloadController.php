@@ -5,9 +5,10 @@ namespace BastSys\CdnBundle\Controller;
 use BastSys\CdnBundle\Service\IFileService;
 use BastSys\CdnBundle\Structure\VirtualFile;
 use BastSys\UtilsBundle\Repository\AEntityRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -15,8 +16,10 @@ use Symfony\Component\Stopwatch\Stopwatch;
  * @package BastSys\CdnBundle\Controller
  * @author mirkl
  */
-class FileDownloadController
+class FileDownloadController extends AbstractController
 {
+    const FILE_DOWNLOAD_PERMISSION = 'bastsys-cdn-file-download-permission';
+
     const LAP_FILE_DEFINITION_LOAD = 'file definition load';
     const LAP_FILE_CONTENT_LOAD = 'file content load';
 
@@ -46,13 +49,15 @@ class FileDownloadController
     }
 
     /**
-     * @param string $id
-     * @param Request $request
+     * @Route("/file-download/{id}", methods={"GET"})
      *
+     * @param string $id
      * @return Response
      */
     public function handle(string $id)
     {
+        $this->denyAccessUnlessGranted(self::FILE_DOWNLOAD_PERMISSION, $id);
+
         $this->stopwatch->start(self::LAP_FILE_DEFINITION_LOAD);
         $file = new VirtualFile($id);
         $this->stopwatch->stop(self::LAP_FILE_DEFINITION_LOAD);
