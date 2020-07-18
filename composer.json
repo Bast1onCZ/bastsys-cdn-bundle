@@ -11,7 +11,7 @@
     "bastsys/graphql-bundle": "^2.0",
     "ext-fileinfo": "*"
   },
-  "license": "Proprietary",
+  "license": "proprietary",
   "authors": [
     {
       "name": "Miroslav Klobaska",
