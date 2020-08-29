@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author  mirkl
  *
  * @ORM\Entity()
- * @ORM\Table(name="cdn__file")
+ * @ORM\Table(name="bastsys_cdn_bundle__file")
  */
 class File extends AUuidEntity implements IFile
 {
