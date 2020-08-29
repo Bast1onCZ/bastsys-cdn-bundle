@@ -2,7 +2,7 @@ services:
     _defaults:
         public: true
 
-    cdn_bundle.repository.file:
+    bastsys.cdn_bundle.repository.file:
         class: BastSys\CdnBundle\Model\File\FileRepository
         arguments:
             - '@doctrine.orm.entity_manager'

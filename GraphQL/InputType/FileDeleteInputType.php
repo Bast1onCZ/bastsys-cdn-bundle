@@ -35,7 +35,7 @@ class FileDeleteInputType extends AInputObjectType implements IEntityApplicable
     public function applyOnEntity($entity, GraphQLRequest $request): void
     {
         $request->processIfTrue('id', function () use ($entity, $request) {
-            $fileService = $request->getContainer()->get('cdn_bundle.file_service');
+            $fileService = $request->getContainer()->get('bastsys.cdn_bundle.file_service');
             try {
                 $fileService->deleteFile($entity); // silence in case file in local storage does not exist
             } catch (\Exception $ex) {

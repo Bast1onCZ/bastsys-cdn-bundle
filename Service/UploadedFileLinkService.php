@@ -35,7 +35,7 @@ class UploadedFileLinkService implements IFileLinkService
             return null; // if size < 0 file is not uploaded
         }
 
-        return $this->router->generate('cdn_bundle.route.file_download', [
+        return $this->router->generate('bastsys.cdn_bundle.route.file_download', [
             'id' => $file->getId()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
     }

@@ -2,13 +2,13 @@ services:
     _defaults:
         public: false
 
-    cdn_bundle.file_service:
+    bastsys.cdn_bundle.file_service:
         class: BastSys\CdnBundle\Service\UploadedFileService
         public: true
         arguments:
             - '@doctrine.orm.entity_manager'
             - '%cdn.storage.path%'
-    cdn_bundle.file_link_service:
+    bastsys.cdn_bundle.file_link_service:
         class: BastSys\CdnBundle\Service\UploadedFileLinkService
         arguments:
             - '@router.default'

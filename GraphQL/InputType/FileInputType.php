@@ -47,7 +47,7 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
     function create(GraphQLRequest $request): IFile
     {
         /** @var IFileService $fileService */
-        $fileService = $request->getContainer()->get('cdn_bundle.file_service');
+        $fileService = $request->getContainer()->get('bastsys.cdn_bundle.file_service');
 
         $content = base64_decode($request->getParameter('content'));
         $entity = $fileService->createFile($content);
@@ -68,7 +68,7 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
     public function applyOnEntity($entity, GraphQLRequest $request): void
     {
         /** @var IFileService $fileService */
-        $fileService = $request->getContainer()->get('cdn_bundle.file_service');
+        $fileService = $request->getContainer()->get('bastsys.cdn_bundle.file_service');
 
         $content = base64_decode($request->getParameter('content'));
         $fileService->updateFile($entity, $content);

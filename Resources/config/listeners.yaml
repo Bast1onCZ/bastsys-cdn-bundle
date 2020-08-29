@@ -2,15 +2,15 @@ services:
     _defaults:
         public: false
 
-    cdn_bundle.listener.file_link:
+    bastsys.cdn_bundle.listener.file_link:
         class: BastSys\CdnBundle\EventListener\FileLinkListener
         arguments:
-            - '@cdn_bundle.file_link_service'
+            - '@bastsys.cdn_bundle.file_link_service'
         tags:
             - {name: doctrine.event_subscriber, connection: default}
-    cdn_bundle.listener.file_delete:
+    bastsys.cdn_bundle.listener.file_delete:
         class: BastSys\CdnBundle\EventListener\FileRemoveListener
         arguments:
-            - '@cdn_bundle.file_service'
+            - '@bastsys.cdn_bundle.file_service'
         tags:
             - {name: doctrine.event_subscriber, connection: default }
