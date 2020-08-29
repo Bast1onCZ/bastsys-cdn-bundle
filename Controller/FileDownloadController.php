@@ -49,7 +49,7 @@ class FileDownloadController extends AbstractController
     }
 
     /**
-     * @Route("/file-download/{id}", methods={"GET"})
+     * @Route("/file-download/{id}", name="bastsys.cdn_bundle.route.file_download", methods={"GET"})
      *
      * @param string $id
      * @return Response

@@ -50,7 +50,7 @@ class FileUploadController extends AbstractController
     }
 
     /**
-     * @Route("/file-upload", methods={"POST", "OPTIONS"})
+     * @Route("/file-upload", name="bastsys.cdn_bundle.route.file_upload", methods={"POST", "OPTIONS"})
      *
      * @param Request $request
      *

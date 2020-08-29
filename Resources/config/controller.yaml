@@ -3,13 +3,11 @@ services:
         public: true
         autowire: true
 
-    bastsys.cdn_bundle.controller.file_upload:
-        class: BastSys\CdnBundle\Controller\FileUploadController
+    BastSys\CdnBundle\Controller\FileUploadController:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@bastsys.cdn_bundle.file_service'
-    bastsys.cdn_bundle.controller.file_download:
-        class: BastSys\CdnBundle\Controller\FileDownloadController
+    BastSys\CdnBundle\Controller\FileDownloadController:
         arguments:
             - '@bastsys.cdn_bundle.file_service'
             - '@bastsys.cdn_bundle.repository.file'
