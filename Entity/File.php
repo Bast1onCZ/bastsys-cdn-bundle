@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace BastSys\CdnBundle\Entity;
 
@@ -28,16 +29,16 @@ class File extends AUuidEntity implements IFile
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="string", nullable=true)
      */
-    private $mimeType;
+    private $mimeType = null;
 
     /**
      * @var int
      * @ORM\Column(type="integer")
      */
-    private $size;
+    private $size = 0;
 
     public function __construct()
     {
@@ -63,7 +64,7 @@ class File extends AUuidEntity implements IFile
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getMimeType(): ?string
     {
