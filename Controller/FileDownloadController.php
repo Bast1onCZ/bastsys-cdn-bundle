@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BastSys\CdnBundle\Controller;
 
 use BastSys\CdnBundle\Entity\IFile;
+use BastSys\CdnBundle\Security\FileDownloadVoter;
 use BastSys\CdnBundle\Service\IFileService;
 use BastSys\UtilsBundle\Repository\AEntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,11 +57,16 @@ class FileDownloadController extends AbstractController
      */
     public function handle(string $id)
     {
+        // find file in database
         $this->stopwatch->start(self::LAP_FILE_DEFINITION_LOAD);
         /** @var IFile $file */
         $file = $this->fileRepository->findById($id, true);
         $this->stopwatch->stop(self::LAP_FILE_DEFINITION_LOAD);
 
+        // vote for file download
+        $this->denyAccessUnlessGranted(FileDownloadVoter::ATTRIBUTE, $file);
+
+        // load file contents
         $this->stopwatch->start(self::LAP_FILE_CONTENT_LOAD);
         $fileContents = $this->fileService->getContents($file);
         $this->stopwatch->stop(self::LAP_FILE_CONTENT_LOAD);
@@ -69,6 +75,7 @@ class FileDownloadController extends AbstractController
             throw new NotFoundHttpException("File '$id' was not found");
         }
 
+        // send file
         return new Response(
             $fileContents,
             200,
