@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class FileUploadController extends AbstractController
 {
     const HEADER_FILE_NAME = 'X-File-Name';
-    const FILE_UPLOAD_PERMISSION = 'bastsys-cdn-file-upload-permission';
 
     /** @var EntityManagerInterface */
     private $em;
@@ -63,8 +62,6 @@ class FileUploadController extends AbstractController
                 'Access-Control-Allow-Headers' => self::HEADER_FILE_NAME
             ]);
         }
-
-        $this->denyAccessUnlessGranted(self::FILE_UPLOAD_PERMISSION);
 
         $headers = $request->headers;
         $fileName = $headers->get(self::HEADER_FILE_NAME);

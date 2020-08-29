@@ -19,8 +19,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class FileDownloadController extends AbstractController
 {
-    const FILE_DOWNLOAD_PERMISSION = 'bastsys-cdn-file-download-permission';
-
     const LAP_FILE_DEFINITION_LOAD = 'file definition load';
     const LAP_FILE_CONTENT_LOAD = 'file content load';
 
@@ -58,8 +56,6 @@ class FileDownloadController extends AbstractController
      */
     public function handle(string $id)
     {
-        $this->denyAccessUnlessGranted(self::FILE_DOWNLOAD_PERMISSION, $id);
-
         $this->stopwatch->start(self::LAP_FILE_DEFINITION_LOAD);
         /** @var IFile $file */
         $file = $this->fileRepository->findById($id, true);
