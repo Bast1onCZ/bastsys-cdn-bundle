@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BastSys\CdnBundle\Controller;
 
 use BastSys\CdnBundle\Event\FileUploadedEvent;
+use BastSys\CdnBundle\Security\FileUploadVoter;
 use BastSys\CdnBundle\Service\IFileService;
 use BastSys\CdnBundle\Structure\FileContainer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,14 +65,12 @@ class FileUploadController extends AbstractController
             ]);
         }
 
-        $headers = $request->headers;
-
+        // process file data
         $fileName = urldecode(
-            $headers->get(self::HEADER_FILE_NAME, '')
+            $request->headers->get(self::HEADER_FILE_NAME, '')
         );
         $fileName = $fileName ? $fileName : null; // '' > null
-
-        $contentType = $headers->get('Content-Type');
+        $contentType = $request->headers->get('Content-Type');
         $fileContent = $request->getContent();
 
         $fileContainer = new FileContainer(
@@ -80,16 +79,23 @@ class FileUploadController extends AbstractController
             $fileContent
         );
 
+        // vote for upload
+        $this->denyAccessUnlessGranted(FileUploadVoter::ATTRIBUTE, $fileContainer);
+
+        // create local file
         $file = $this->fileService->createFile($fileContainer);
 
+        // dispatch uploaded event
         $event = new FileUploadedEvent($file);
         try {
             $this->eventDispatcher->dispatch($event);
         } catch(\Exception $ex) {
+            // delete file on exception
             $this->fileService->deleteFile($file);
             throw $ex;
         }
 
+        // flush database if needed
         if($this->em->isOpen()) {
             $this->em->flush();
         }
