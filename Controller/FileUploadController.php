@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace BastSys\CdnBundle\Controller;
 
-use BastSys\CdnBundle\Event\FileUploadEvent;
+use BastSys\CdnBundle\Event\FileUploadedEvent;
 use BastSys\CdnBundle\Service\IFileService;
+use BastSys\CdnBundle\Structure\FileContainer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -64,21 +65,26 @@ class FileUploadController extends AbstractController
         }
 
         $headers = $request->headers;
-        $fileName = $headers->get(self::HEADER_FILE_NAME);
+
+        $fileName = urldecode(
+            $headers->get(self::HEADER_FILE_NAME, '')
+        );
+        $fileName = $fileName ? $fileName : null; // '' > null
+
         $contentType = $headers->get('Content-Type');
         $fileContent = $request->getContent();
 
-        $file = $this->fileService->createFile($fileContent);
-        if ($fileName) {
-            $file->setName(
-                urldecode($fileName) // decoding file name in case it contains percent-encoded characters
-            );
-        }
-        $file->setMimeType($contentType);
+        $fileContainer = new FileContainer(
+            $fileName,
+            $contentType,
+            $fileContent
+        );
 
-        $event = new FileUploadEvent($file);
+        $file = $this->fileService->createFile($fileContainer);
+
+        $event = new FileUploadedEvent($file);
         try {
-            $this->eventDispatcher->dispatch($event, $event::NAME);
+            $this->eventDispatcher->dispatch($event);
         } catch(\Exception $ex) {
             $this->fileService->deleteFile($file);
             throw $ex;

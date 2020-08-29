@@ -5,6 +5,7 @@ namespace BastSys\CdnBundle\Service;
 
 use BastSys\CdnBundle\Entity\File;
 use BastSys\CdnBundle\Entity\IFile;
+use BastSys\CdnBundle\Structure\FileContainer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
@@ -41,24 +42,29 @@ class UploadedFileService implements IFileService
     /**
      * Creates File and saves its data, persists the file entity
      *
-     * @param string $fileContents
-     *
+     * @param FileContainer $fileContainer
      * @return IFile
-     * @throws \Exception
+     * @throws UploadException
      */
-    public function createFile(string $fileContents): IFile
+    public function createFile(FileContainer $fileContainer): IFile
     {
         $this->checkDirectory($this->cdnPath);
 
         $file = new File();
         $size = file_put_contents(
             $this->getFilePath($file),
-            $fileContents
+            $fileContainer->getContent()
         );
         if ($size === false) {
             throw new UploadException();
         }
 
+        $file->setName(
+            $fileContainer->getName()
+        );
+        $file->setMimeType(
+            $fileContainer->getContentType()
+        );
         $file->setSize($size);
         $this->entityManager->persist($file);
 

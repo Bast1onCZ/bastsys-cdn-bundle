@@ -7,24 +7,19 @@ use BastSys\CdnBundle\Entity\IFile;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FileUploadEvent
+ * Class FileUploadedEvent
  * @package BastSys\CdnBundle\Event
  * @author mirkl
  */
-class FileUploadEvent extends Event
+class FileUploadedEvent extends Event
 {
-    /**
-     *
-     */
-    const NAME = 'cdn.file.upload';
-
     /**
      * @var IFile
      */
     private $file;
 
     /**
-     * FileUploadEvent constructor.
+     * FileUploadedEvent constructor.
      * @param IFile $file
      */
     public function __construct(IFile $file)

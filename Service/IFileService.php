@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BastSys\CdnBundle\Service;
 
 use BastSys\CdnBundle\Entity\IFile;
+use BastSys\CdnBundle\Structure\FileContainer;
 
 /**
  * Interface IFileService
@@ -13,13 +14,12 @@ use BastSys\CdnBundle\Entity\IFile;
 interface IFileService
 {
     /**
-     * Saves file contents and returns IFile that can be used to access it
+     * Created a persistent file from a file container
      *
-     * @param string $fileContents
-     *
+     * @param FileContainer $fileContainer
      * @return IFile
      */
-    function createFile(string $fileContents): IFile;
+    function createFile(FileContainer $fileContainer): IFile;
 
     /**
      * Updates file
