@@ -8,6 +8,11 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 
+/**
+ * Class FileType
+ * @package BastSys\CdnBundle\GraphQL\Type
+ * @author mirkl
+ */
 class FileType extends AbstractObjectType
 {
     /**

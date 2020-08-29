@@ -4,6 +4,11 @@ namespace BastSys\CdnBundle\Service;
 
 use BastSys\CdnBundle\Entity\IFile;
 
+/**
+ * Interface IFileService
+ * @package BastSys\CdnBundle\Service
+ * @author mirkl
+ */
 interface IFileService
 {
     /**

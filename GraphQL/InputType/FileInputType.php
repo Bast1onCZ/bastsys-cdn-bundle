@@ -3,6 +3,7 @@
 namespace BastSys\CdnBundle\GraphQL\InputType;
 
 use BastSys\CdnBundle\Entity\IFile;
+use BastSys\CdnBundle\Service\IFileService;
 use BastSys\GraphQLBundle\GraphQL\GraphQLRequest;
 use BastSys\GraphQLBundle\GraphQL\InputType\AInputObjectType;
 use BastSys\GraphQLBundle\GraphQL\InputType\IEntityApplicable;
@@ -11,7 +12,6 @@ use BastSys\GraphQLBundle\GraphQL\ScalarType\mimeType\MimeType;
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Scalar\StringType;
-use Youshido\GraphQL\Type\TypeInterface;
 
 /**
  * Class FileInputType
@@ -26,7 +26,7 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
     /**
      * FileInputType constructor.
      *
-     * @param TypeInterface|null $mimeType
+     * @param MimeType $mimeType
      */
     public function __construct(MimeType $mimeType = null)
     {
@@ -46,6 +46,7 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
      */
     function create(GraphQLRequest $request): IFile
     {
+        /** @var IFileService $fileService */
         $fileService = $request->getContainer()->get('cdn_bundle.file_service');
 
         $content = base64_decode($request->getParameter('content'));
@@ -62,10 +63,11 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
     /**
      * @param IFile $entity
      * @param GraphQLRequest $request
-     * @throws \BastSys\GraphQLBundle\Exception\Process\GraphQL\GraphQLRequiredParameterException
+     * @throws \BastSys\GraphQLBundle\Exception\Process\GraphQLRequiredParameterException
      */
     public function applyOnEntity($entity, GraphQLRequest $request): void
     {
+        /** @var IFileService $fileService */
         $fileService = $request->getContainer()->get('cdn_bundle.file_service');
 
         $content = base64_decode($request->getParameter('content'));

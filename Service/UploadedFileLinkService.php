@@ -6,16 +6,29 @@ use BastSys\CdnBundle\Entity\IFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Class UploadedFileLinkService
+ * @package BastSys\CdnBundle\Service
+ * @author mirkl
+ */
 class UploadedFileLinkService implements IFileLinkService
 {
     /** @var RouterInterface */
     private $router;
 
+    /**
+     * UploadedFileLinkService constructor.
+     * @param RouterInterface $router
+     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * @param IFile $file
+     * @return string|null
+     */
     public function getFileLink(IFile $file): ?string
     {
         if ($file->getSize() < 0) {
