@@ -3,7 +3,6 @@
 namespace BastSys\CdnBundle\Service;
 
 use BastSys\CdnBundle\Entity\IFile;
-use BastSys\CdnBundle\Structure\VirtualFile;
 
 interface IFileService
 {
@@ -48,11 +47,4 @@ interface IFileService
      * @return string
      */
     function getContents(IFile $file): ?string;
-
-    /**
-     * Loads necessary information to a virtual file.
-     *
-     * @param VirtualFile $virtualFile
-     */
-    function feedVirtualFile(VirtualFile $virtualFile): void;
 }

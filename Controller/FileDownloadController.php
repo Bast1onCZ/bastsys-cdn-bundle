@@ -2,8 +2,8 @@
 
 namespace BastSys\CdnBundle\Controller;
 
+use BastSys\CdnBundle\Entity\IFile;
 use BastSys\CdnBundle\Service\IFileService;
-use BastSys\CdnBundle\Structure\VirtualFile;
 use BastSys\UtilsBundle\Repository\AEntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,13 +53,15 @@ class FileDownloadController extends AbstractController
      *
      * @param string $id
      * @return Response
+     * @throws \BastSys\UtilsBundle\Exception\Entity\EntityNotFoundByIdException
      */
     public function handle(string $id)
     {
         $this->denyAccessUnlessGranted(self::FILE_DOWNLOAD_PERMISSION, $id);
 
         $this->stopwatch->start(self::LAP_FILE_DEFINITION_LOAD);
-        $file = new VirtualFile($id);
+        /** @var IFile $file */
+        $file = $this->fileRepository->findById($id, true);
         $this->stopwatch->stop(self::LAP_FILE_DEFINITION_LOAD);
 
         $this->stopwatch->start(self::LAP_FILE_CONTENT_LOAD);
@@ -69,8 +71,6 @@ class FileDownloadController extends AbstractController
         if ($fileContents === null) {
             throw new NotFoundHttpException("File '$id' was not found");
         }
-
-        $this->fileService->feedVirtualFile($file);
 
         return new Response(
             $fileContents,

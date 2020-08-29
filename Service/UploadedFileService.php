@@ -4,7 +4,6 @@ namespace BastSys\CdnBundle\Service;
 
 use BastSys\CdnBundle\Entity\File;
 use BastSys\CdnBundle\Entity\IFile;
-use BastSys\CdnBundle\Structure\VirtualFile;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
@@ -159,16 +158,4 @@ class UploadedFileService implements IFileService
 
         $file->setSize($newSize);
     }
-
-    /**
-     * @param VirtualFile $virtualFile
-     */
-    function feedVirtualFile(VirtualFile $virtualFile): void
-    {
-        $filePath = $this->getFilePath($virtualFile);
-        $virtualFile->setMimeType(
-            mime_content_type($filePath)
-        );
-    }
-
 }
