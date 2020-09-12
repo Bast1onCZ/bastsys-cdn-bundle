@@ -54,7 +54,7 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
         $fileContainer = new FileContainer(
             $request['name'],
             $request['mimeType'],
-            base64_encode($request['content'])
+            base64_decode($request['content'])
         );
 
         $entity = $fileService->createFile($fileContainer);
