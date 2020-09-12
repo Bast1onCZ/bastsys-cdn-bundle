@@ -5,6 +5,7 @@ namespace BastSys\CdnBundle\GraphQL\InputType;
 
 use BastSys\CdnBundle\Entity\IFile;
 use BastSys\CdnBundle\Service\IFileService;
+use BastSys\CdnBundle\Structure\FileContainer;
 use BastSys\GraphQLBundle\GraphQL\GraphQLRequest;
 use BastSys\GraphQLBundle\GraphQL\InputType\AInputObjectType;
 use BastSys\GraphQLBundle\GraphQL\InputType\IEntityApplicable;
@@ -50,13 +51,13 @@ class FileInputType extends AInputObjectType implements IEntityApplicable, IEnti
         /** @var IFileService $fileService */
         $fileService = $request->getContainer()->get('bastsys.cdn_bundle.file_service');
 
-        $content = base64_decode($request->getParameter('content'));
-        $entity = $fileService->createFile($content);
+        $fileContainer = new FileContainer(
+            $request['name'],
+            $request['mimeType'],
+            base64_encode($request['content'])
+        );
 
-        $request->processParameter('name', function ($value) use ($entity) {
-            $entity->setName($value);
-        });
-        $entity->setMimeType($request->getParameter('mimeType'));
+        $entity = $fileService->createFile($fileContainer);
 
         return $entity;
     }
